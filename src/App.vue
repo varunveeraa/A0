@@ -3,6 +3,7 @@ import WelcomeHeader from './components/WelcomeHeader.vue'
 import HeroSection from './components/HeroSection.vue'
 import MyName from './components/MyName.vue'
 import FeaturesSection from './components/FeaturesSection.vue'
+import BootstrapShowcase from './components/BootstrapShowcase.vue'
 import ContactSection from './components/ContactSection.vue'
 import WelcomeFooter from './components/WelcomeFooter.vue'
 </script>
@@ -16,6 +17,7 @@ import WelcomeFooter from './components/WelcomeFooter.vue'
         <MyName class="slide-up" />
       </div>
       <FeaturesSection class="slide-up" />
+      <BootstrapShowcase class="slide-up" />
       <ContactSection class="slide-up" />
     </main>
     <WelcomeFooter />
