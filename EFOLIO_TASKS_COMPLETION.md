@@ -172,7 +172,7 @@ src/
    npm run dev
    ```
 
-2. **Access Application**: Open http://localhost:5173/
+2. **Access Application**: Open http://localhost:5174/
 
 3. **Test Responsive Design**: 
    - Resize browser window to test breakpoints
@@ -190,6 +190,7 @@ src/
    - Try view and delete actions
 
 ## Commit History
+- `07537a4`: fix: resolve PrimeVue theme issues and replace with Bootstrap components
 - `2256665`: feat: integrate Bootstrap and PrimeVue with enhanced form validation
 - `8d656d1`: feat: add MyName.vue component to welcome page
 - `89ec966`: feat: enhance app with animations and background effects
