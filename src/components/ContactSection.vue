@@ -1,14 +1,5 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import DataTable from 'primevue/datatable'
-import Column from 'primevue/column'
-import Button from 'primevue/button'
-import Tag from 'primevue/tag'
-import InputText from 'primevue/inputtext'
-import Textarea from 'primevue/textarea'
-import Dropdown from 'primevue/dropdown'
-import Checkbox from 'primevue/checkbox'
-import Message from 'primevue/message'
 
 const form = ref({
   name: '',
@@ -406,120 +397,120 @@ const deleteMessage = (id: number) => {
       <!-- Success Message -->
       <div v-if="showSuccessMessage" class="row mt-4">
         <div class="col-12">
-          <Message severity="success" :closable="false">
-            <template #messageicon>
-              <i class="pi pi-check-circle"></i>
-            </template>
+          <div class="alert alert-success d-flex align-items-center" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
             Your message has been submitted successfully! We'll get back to you soon.
-          </Message>
+          </div>
         </div>
       </div>
 
-      <!-- PrimeVue DataTable for Submitted Messages -->
+      <!-- Bootstrap DataTable for Submitted Messages -->
       <div v-if="submittedData.length > 0" class="row mt-5">
         <div class="col-12">
           <h3 class="text-white mb-4">
-            <i class="pi pi-table me-2"></i>
+            <i class="bi bi-table me-2"></i>
             Submitted Messages ({{ submittedData.length }})
           </h3>
           <div class="datatable-container">
-            <DataTable
-              :value="submittedData"
-              :paginator="true"
-              :rows="5"
-              :rowsPerPageOptions="[5, 10, 20]"
-              paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-              currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-              responsiveLayout="scroll"
-              class="p-datatable-dark"
-              stripedRows
-              showGridlines
-            >
-              <Column field="name" header="Name" sortable style="min-width: 150px">
-                <template #body="{ data }">
-                  <div class="d-flex align-items-center">
-                    <i class="pi pi-user me-2 text-primary"></i>
-                    {{ data.name }}
-                  </div>
-                </template>
-              </Column>
+            <div class="table-responsive">
+              <table class="table table-dark table-striped table-hover">
+                <thead class="table-dark">
+                  <tr>
+                    <th scope="col">
+                      <i class="bi bi-person me-1"></i>Name
+                    </th>
+                    <th scope="col">
+                      <i class="bi bi-envelope me-1"></i>Email
+                    </th>
+                    <th scope="col">
+                      <i class="bi bi-telephone me-1"></i>Phone
+                    </th>
+                    <th scope="col">
+                      <i class="bi bi-building me-1"></i>Company
+                    </th>
+                    <th scope="col">
+                      <i class="bi bi-flag me-1"></i>Priority
+                    </th>
+                    <th scope="col">
+                      <i class="bi bi-envelope-check me-1"></i>Newsletter
+                    </th>
+                    <th scope="col">
+                      <i class="bi bi-calendar me-1"></i>Submitted
+                    </th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="item in submittedData" :key="item.id">
+                    <td>{{ item.name }}</td>
+                    <td>
+                      <a :href="`mailto:${item.email}`" class="text-decoration-none text-info">
+                        {{ item.email }}
+                      </a>
+                    </td>
+                    <td>{{ item.phone }}</td>
+                    <td>{{ item.company || 'N/A' }}</td>
+                    <td>
+                      <span class="badge" :class="{
+                        'bg-success': item.priority === 'low',
+                        'bg-info': item.priority === 'medium',
+                        'bg-warning': item.priority === 'high',
+                        'bg-danger': item.priority === 'urgent'
+                      }">
+                        <i :class="`bi ${item.priority === 'urgent' ? 'bi-exclamation-triangle' :
+                                      item.priority === 'high' ? 'bi-exclamation-circle' :
+                                      item.priority === 'medium' ? 'bi-info-circle' : 'bi-check-circle'} me-1`"></i>
+                        {{ item.priority.toUpperCase() }}
+                      </span>
+                    </td>
+                    <td>
+                      <i :class="`bi ${item.newsletter ? 'bi-check-circle text-success' : 'bi-x-circle text-danger'} me-1`"></i>
+                      {{ item.newsletter ? 'Yes' : 'No' }}
+                    </td>
+                    <td>{{ item.submittedAt }}</td>
+                    <td>
+                      <div class="btn-group" role="group">
+                        <button
+                          type="button"
+                          class="btn btn-outline-info btn-sm"
+                          @click="viewMessage(item)"
+                          title="View Details"
+                        >
+                          <i class="bi bi-eye"></i>
+                        </button>
+                        <button
+                          type="button"
+                          class="btn btn-outline-danger btn-sm"
+                          @click="deleteMessage(item.id)"
+                          title="Delete"
+                        >
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
 
-              <Column field="email" header="Email" sortable style="min-width: 200px">
-                <template #body="{ data }">
-                  <div class="d-flex align-items-center">
-                    <i class="pi pi-envelope me-2 text-info"></i>
-                    <a :href="`mailto:${data.email}`" class="text-decoration-none">
-                      {{ data.email }}
-                    </a>
-                  </div>
-                </template>
-              </Column>
-
-              <Column field="phone" header="Phone" sortable style="min-width: 150px">
-                <template #body="{ data }">
-                  <div class="d-flex align-items-center">
-                    <i class="pi pi-phone me-2 text-success"></i>
-                    {{ data.phone }}
-                  </div>
-                </template>
-              </Column>
-
-              <Column field="company" header="Company" sortable style="min-width: 150px">
-                <template #body="{ data }">
-                  <div class="d-flex align-items-center">
-                    <i class="pi pi-building me-2 text-warning"></i>
-                    {{ data.company || 'N/A' }}
-                  </div>
-                </template>
-              </Column>
-
-              <Column field="priority" header="Priority" sortable style="min-width: 120px">
-                <template #body="{ data }">
-                  <Tag
-                    :value="data.priority.toUpperCase()"
-                    :severity="getPrioritySeverity(data.priority)"
-                    :icon="`pi ${data.priority === 'urgent' ? 'pi-exclamation-triangle' :
-                                data.priority === 'high' ? 'pi-exclamation-circle' :
-                                data.priority === 'medium' ? 'pi-info-circle' : 'pi-check-circle'}`"
-                  />
-                </template>
-              </Column>
-
-              <Column field="newsletter" header="Newsletter" style="min-width: 120px">
-                <template #body="{ data }">
-                  <i :class="`pi ${data.newsletter ? 'pi-check text-success' : 'pi-times text-danger'}`"></i>
-                  {{ data.newsletter ? 'Yes' : 'No' }}
-                </template>
-              </Column>
-
-              <Column field="submittedAt" header="Submitted" sortable style="min-width: 180px">
-                <template #body="{ data }">
-                  <div class="d-flex align-items-center">
-                    <i class="pi pi-calendar me-2 text-secondary"></i>
-                    {{ data.submittedAt }}
-                  </div>
-                </template>
-              </Column>
-
-              <Column header="Actions" style="min-width: 120px">
-                <template #body="{ data }">
-                  <div class="d-flex gap-2">
-                    <Button
-                      icon="pi pi-eye"
-                      class="p-button-rounded p-button-text p-button-sm"
-                      v-tooltip="'View Details'"
-                      @click="viewMessage(data)"
-                    />
-                    <Button
-                      icon="pi pi-trash"
-                      class="p-button-rounded p-button-text p-button-sm p-button-danger"
-                      v-tooltip="'Delete'"
-                      @click="deleteMessage(data.id)"
-                    />
-                  </div>
-                </template>
-              </Column>
-            </DataTable>
+            <!-- Simple Pagination -->
+            <nav v-if="submittedData.length > 5" aria-label="Table pagination">
+              <ul class="pagination justify-content-center">
+                <li class="page-item">
+                  <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
+                </li>
+                <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                <li class="page-item">
+                  <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                  </a>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
       </div>
